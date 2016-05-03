@@ -70,6 +70,10 @@ void FSodiumUE4Module::GenerateKeyPair(vector<unsigned char> &pk, vector<unsigne
 	int msg = SodiumGenerateKeyPair(pk, sk);
 }
 
+bool FSodiumUE4Module::Test() {
+	return SodiumTest();
+}
+
 #undef LOCTEXT_NAMESPACE
 	
 IMPLEMENT_MODULE(FSodiumUE4Module, SodiumUE4)

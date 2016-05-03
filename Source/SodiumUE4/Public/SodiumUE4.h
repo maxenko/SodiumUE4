@@ -18,6 +18,8 @@ public:
 
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
+	
+	bool Test();
 
 	void GenerateKeyPair(vector<unsigned char> &pk, vector<unsigned char> &sk);
 
@@ -29,6 +31,7 @@ public:
 		return FModuleManager::Get().IsModuleLoaded("SodiumUE4");
 	}
 	
+
 private:
 	/** Handle to the test dll we will load */
 	void*	libsodiumUE4Handle;

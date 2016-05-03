@@ -1,13 +1,17 @@
 #pragma once
 
 //#include "Kismet/BlueprintFunctionLibrary.h"
+#include "Engine.h"
 #include "SodiumUE4BlueprintInterface.generated.h"
 
 UCLASS()
-class SODIUMUE4_API USodiumUE4Blueprint : public UBlueprintFunctionLibrary
+class USodiumUE4PluginBPLibrary : public UBlueprintFunctionLibrary
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Utility")
+	static bool SodiumTest();
 
 };
