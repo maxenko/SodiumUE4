@@ -21,7 +21,7 @@ public:
 	
 	bool Test();
 
-	void GenerateKeyPair(vector<unsigned char> &pk, vector<unsigned char> &sk);
+	void GenerateKeyPair(unsigned char *pk, unsigned char *sk);
 
 	static inline FSodiumUE4Module& Get(){
 		return FModuleManager::LoadModuleChecked<FSodiumUE4Module>("SodiumUE4"); // name should be the same as directory of the plugin in /Plugins

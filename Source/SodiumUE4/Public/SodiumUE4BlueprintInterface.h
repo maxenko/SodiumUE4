@@ -11,7 +11,22 @@ class USodiumUE4PluginBPLibrary : public UBlueprintFunctionLibrary
 
 public:
 
+	//////////////////////////////////////////////////////////////////////////
+	// Utility methods
+	//////////////////////////////////////////////////////////////////////////
+
 	UFUNCTION(BlueprintCallable, Category = "Sodium|Utility")
 	static bool SodiumTest();
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Sodium|Utility")
+	static TArray<uint8> RandomBytes(int len);
 
+
+
+	//////////////////////////////////////////////////////////////////////////
+	// Core functionality
+	//////////////////////////////////////////////////////////////////////////
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
+	static void GenerateKeyPair(TArray<uint8>& publicKey, TArray<uint8>& privateKey);
 };

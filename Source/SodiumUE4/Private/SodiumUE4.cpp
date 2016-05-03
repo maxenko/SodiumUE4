@@ -21,7 +21,7 @@ void FSodiumUE4Module::StartupModule()
 	// Add on the relative location of the third party dll and load it
 	FString LibraryPath;
 #if PLATFORM_WINDOWS
-	LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SodiumUE4Library/Win64/libsodiumUE4.dll"));
+	LibraryPath = FPaths::Combine(*BaseDir, TEXT("Source/ThirdParty/SodiumUE4Library/x64/Debug/libsodiumUE4.dll"));
 
 	libsodiumUE4Handle = !LibraryPath.IsEmpty() ? FPlatformProcess::GetDllHandle(*LibraryPath) : nullptr;
 
@@ -66,7 +66,7 @@ void FSodiumUE4Module::ShutdownModule()
 	libsodiumUE4Handle = nullptr;
 }
 
-void FSodiumUE4Module::GenerateKeyPair(vector<unsigned char> &pk, vector<unsigned char> &sk) {
+void FSodiumUE4Module::GenerateKeyPair(unsigned char *pk, unsigned char *sk) {
 	int msg = SodiumGenerateKeyPair(pk, sk);
 }
 

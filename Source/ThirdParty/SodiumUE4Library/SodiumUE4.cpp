@@ -9,10 +9,15 @@ __declspec(dllexport) int LoadSodium(){
 	return sodium_init();
 }
 
-__declspec(dllexport) int SodiumGenerateKeyPair(vector<unsigned char> &pk, vector<unsigned char> &sk) {
+
+__declspec(dllexport) int SodiumGenerateKeyPairVec(vector<unsigned char> &pk, vector<unsigned char> &sk) {
 	pk.resize(crypto_box_PUBLICKEYBYTES);
 	sk.resize(crypto_box_SECRETKEYBYTES);
 	return crypto_box_keypair(pk.data(), sk.data());
+}
+
+__declspec(dllexport) int SodiumGenerateKeyPair(unsigned char *pk, unsigned char *sk) {
+	return crypto_box_keypair(pk, sk);
 }
 
 __declspec(dllexport) string SodiumEncryptString(string str, vector<unsigned char> &pk) {
@@ -41,12 +46,11 @@ __declspec(dllexport) string SodiumDecryptString(string str, vector<unsigned cha
 	}
 }
 
-
 __declspec(dllexport) bool SodiumTest() {
 
 	vector<unsigned char> pk_test(0);
 	vector<unsigned char> sk_test(0);
-	auto msgKeys = SodiumGenerateKeyPair(pk_test, sk_test);
+	auto msgKeys = SodiumGenerateKeyPairVec(pk_test, sk_test);
 
 	// generate random data
 	vector<unsigned char> nonce(512);
