@@ -13,3 +13,8 @@ https://opensource.org/licenses/MIT
 
 ### libsodium license:
 https://opensource.org/licenses/ISC
+
+
+#Usage
+
+![Public encryption](http://i.imgur.com/ezgBj7v.jpg)
