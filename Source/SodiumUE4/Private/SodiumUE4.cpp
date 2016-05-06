@@ -21,7 +21,7 @@ void FSodiumUE4Module::StartupModule()
 	// Add on the relative location of the third party dll and load it
 	FString LibraryPath;
 #if PLATFORM_WINDOWS
-	LibraryPath = FPaths::Combine(*BaseDir, TEXT("Source/ThirdParty/SodiumUE4Library/x64/Debug/libsodiumUE4.dll"));
+	LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SodiumUE4Library/Win64/libsodiumUE4.dll"));
 
 	libsodiumUE4Handle = !LibraryPath.IsEmpty() ? FPlatformProcess::GetDllHandle(*LibraryPath) : nullptr;
 
@@ -66,8 +66,38 @@ void FSodiumUE4Module::ShutdownModule()
 	libsodiumUE4Handle = nullptr;
 }
 
+//////////////////////////////////////////////////////////////////////////
+// Sodium API
+//////////////////////////////////////////////////////////////////////////
+
+int FSodiumUE4Module::GetPublicKeyBytes() {
+	return SodiumGetPublicKeyBytes();
+}
+
+int FSodiumUE4Module::GetSecretKeyBytes() {
+	return SodiumGetSecretKeyBytes();
+}
+
+int FSodiumUE4Module::GetBoxSealBytes() {
+	return SodiumGetBoxSealBytes();
+}
+
 void FSodiumUE4Module::GenerateKeyPair(unsigned char *pk, unsigned char *sk) {
 	int msg = SodiumGenerateKeyPair(pk, sk);
+}
+
+void FSodiumUE4Module::RandomBytes(unsigned char* bytes, size_t len) {
+	SodiumRandomBytes(bytes, len);
+}
+
+int FSodiumUE4Module::Encrypt(vector<unsigned char>& encrypted, unsigned char *data, size_t data_len, unsigned char *pk) {
+	encrypted.resize(data_len + this->GetBoxSealBytes());
+	return SodiumEncrypt(encrypted.data(), data, data_len, pk);
+}
+
+int FSodiumUE4Module::Decrypt(unsigned char *encrypted, size_t data_len, vector<unsigned char>& decrypted, unsigned char *pk, unsigned char *sk) {
+	decrypted.resize(data_len - this->GetBoxSealBytes());
+	return SodiumDecrypt(encrypted, data_len, decrypted.data(), pk, sk);
 }
 
 bool FSodiumUE4Module::Test() {

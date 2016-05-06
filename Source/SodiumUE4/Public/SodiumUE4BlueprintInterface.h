@@ -11,6 +11,7 @@ class USodiumUE4PluginBPLibrary : public UBlueprintFunctionLibrary
 
 public:
 
+
 	//////////////////////////////////////////////////////////////////////////
 	// Utility methods
 	//////////////////////////////////////////////////////////////////////////
@@ -19,8 +20,7 @@ public:
 	static bool SodiumTest();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Sodium|Utility")
-	static TArray<uint8> RandomBytes(int len);
-
+	static TArray<uint8> RandomBytes(int32 len);
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -29,4 +29,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
 	static void GenerateKeyPair(TArray<uint8>& publicKey, TArray<uint8>& privateKey);
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
+	static void EncryptString(FString s, TArray<uint8> publicKey, TArray<uint8>& encrypted);
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
+	static void DecryptString(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, FString& decrypted);
+
+
 };

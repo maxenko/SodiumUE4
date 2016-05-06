@@ -23,6 +23,15 @@ public:
 
 	void GenerateKeyPair(unsigned char *pk, unsigned char *sk);
 
+	int GetPublicKeyBytes();
+	int GetSecretKeyBytes();
+	int GetBoxSealBytes();
+
+	void RandomBytes(unsigned char* bytes, size_t len);
+
+	int Encrypt(vector<unsigned char>& encrypted, unsigned char *data, size_t data_len, unsigned char *pk);
+	int Decrypt(unsigned char *encrypted, size_t data_len, vector<unsigned char>& decrypted, unsigned char *pk, unsigned char *sk);
+
 	static inline FSodiumUE4Module& Get(){
 		return FModuleManager::LoadModuleChecked<FSodiumUE4Module>("SodiumUE4"); // name should be the same as directory of the plugin in /Plugins
 	}
