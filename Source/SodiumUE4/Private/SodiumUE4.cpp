@@ -82,22 +82,29 @@ int FSodiumUE4Module::GetBoxSealBytes() {
 	return SodiumGetBoxSealBytes();
 }
 
-void FSodiumUE4Module::GenerateKeyPair(unsigned char *pk, unsigned char *sk) {
-	int msg = SodiumGenerateKeyPair(pk, sk);
+void FSodiumUE4Module::GenerateKeyPair(TArray<uint8>& publicKey, TArray<uint8>& secretKey) {
+	auto sodium = FSodiumUE4Module::Get();
+
+	// allocate space for key
+	publicKey.SetNum(sodium.GetPublicKeyBytes());
+	secretKey.SetNum(sodium.GetSecretKeyBytes());
+
+	// generate key
+	SodiumGenerateKeyPair(publicKey.GetData(), secretKey.GetData());
 }
 
 void FSodiumUE4Module::RandomBytes(unsigned char* bytes, size_t len) {
 	SodiumRandomBytes(bytes, len);
 }
 
-int FSodiumUE4Module::Encrypt(vector<unsigned char>& encrypted, unsigned char *data, size_t data_len, unsigned char *pk) {
-	encrypted.resize(data_len + this->GetBoxSealBytes());
-	return SodiumEncrypt(encrypted.data(), data, data_len, pk);
+int FSodiumUE4Module::Encrypt(TArray<uint8>& encrypted, TArray<uint8>& data, TArray<uint8>& publicKey) {
+	encrypted.SetNum(data.Num() + this->GetBoxSealBytes());
+	return SodiumEncrypt(encrypted.GetData(), data.GetData(), data.Num(), publicKey.GetData());
 }
 
-int FSodiumUE4Module::Decrypt(unsigned char *encrypted, size_t data_len, vector<unsigned char>& decrypted, unsigned char *pk, unsigned char *sk) {
-	decrypted.resize(data_len - this->GetBoxSealBytes());
-	return SodiumDecrypt(encrypted, data_len, decrypted.data(), pk, sk);
+int FSodiumUE4Module::Decrypt(TArray<uint8>& decrypted, TArray<uint8>& encrypted, TArray<uint8>& publicKey, TArray<uint8>& privateKey) {
+	decrypted.SetNum(encrypted.Num() - this->GetBoxSealBytes());
+	return SodiumDecrypt(decrypted.GetData(), encrypted.GetData(), encrypted.Num(), publicKey.GetData(), privateKey.GetData());
 }
 
 bool FSodiumUE4Module::Test() {

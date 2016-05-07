@@ -31,10 +31,10 @@ public:
 	static void GenerateKeyPair(TArray<uint8>& publicKey, TArray<uint8>& privateKey);
 
 	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
-	static void EncryptString(FString s, TArray<uint8> publicKey, TArray<uint8>& encrypted);
+	static void EncryptString(FString s, TArray<uint8> publicKey, TArray<uint8>& encrypted, bool& success);
 
 	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
-	static void DecryptString(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, FString& decrypted);
+	static void DecryptString(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, FString& decrypted, bool& success);
 
 
 };

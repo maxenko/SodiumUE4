@@ -33,7 +33,7 @@ __declspec(dllexport) int SodiumEncrypt(unsigned char *to, unsigned char *data, 
 	return crypto_box_seal(to, data, data_len, pk);
 }
 
-__declspec(dllexport) int SodiumDecrypt(unsigned char *encrypted, size_t len, unsigned char *decrypted, unsigned char *pk, unsigned char *sk) {
+__declspec(dllexport) int SodiumDecrypt(unsigned char *decrypted, unsigned char *encrypted, size_t len, unsigned char *pk, unsigned char *sk) {
 	return crypto_box_seal_open(decrypted, encrypted, len, pk, sk);
 }
 

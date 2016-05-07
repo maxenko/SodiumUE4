@@ -3,10 +3,6 @@
 #pragma once
 
 #include "ModuleManager.h"
-#include <string>
-#include <vector>
-
-using namespace std;
 
 class FSodiumUE4Module : public IModuleInterface
 {
@@ -21,7 +17,7 @@ public:
 	
 	bool Test();
 
-	void GenerateKeyPair(unsigned char *pk, unsigned char *sk);
+	void GenerateKeyPair(TArray<uint8>& publicKey, TArray<uint8>& secretKey);
 
 	int GetPublicKeyBytes();
 	int GetSecretKeyBytes();
@@ -29,8 +25,8 @@ public:
 
 	void RandomBytes(unsigned char* bytes, size_t len);
 
-	int Encrypt(vector<unsigned char>& encrypted, unsigned char *data, size_t data_len, unsigned char *pk);
-	int Decrypt(unsigned char *encrypted, size_t data_len, vector<unsigned char>& decrypted, unsigned char *pk, unsigned char *sk);
+	int FSodiumUE4Module::Encrypt(TArray<uint8>& encrypted, TArray<uint8>& data, TArray<uint8>& publicKey);
+	int Decrypt(TArray<uint8>& decrypted, TArray<uint8>& encrypted, TArray<uint8>& publicKey, TArray<uint8>& privateKey);
 
 	static inline FSodiumUE4Module& Get(){
 		return FModuleManager::LoadModuleChecked<FSodiumUE4Module>("SodiumUE4"); // name should be the same as directory of the plugin in /Plugins
@@ -40,7 +36,6 @@ public:
 		return FModuleManager::Get().IsModuleLoaded("SodiumUE4");
 	}
 	
-
 private:
 	/** Handle to the test dll we will load */
 	void*	libsodiumUE4Handle;
