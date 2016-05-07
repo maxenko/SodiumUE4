@@ -1,5 +1,5 @@
 # libsodium-ue4
-An easy to use cryptography plugin for Unreal Engine 4 based on libsodium.
+An easy to use public and private cryptography plugin for Unreal Engine 4 based on libsodium.
 
 ## Installation
 Look for stable branch in the future as this gets developed. Master branch is unstable.
