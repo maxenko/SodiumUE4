@@ -29,8 +29,9 @@ void USodiumUE4PluginBPLibrary::EncryptString(FString s, TArray<uint8> publicKey
 	auto sodium = FSodiumUE4Module::Get();
 
 	TArray<uint8> data;
-	data.Append((unsigned char*)TCHAR_TO_UTF8(*s), s.Len());
-	encrypted.SetNum((data.Num() * data.GetTypeSize()) + sodium.GetBoxSealBytes());
+	string _s(TCHAR_TO_UTF8(*s));
+	data.Append((unsigned char *)_s.data(), _s.size());
+	encrypted.SetNum(_s.size() + sodium.GetBoxSealBytes());
 
 	auto msg = sodium.Encrypt(encrypted, data, publicKey);
 
