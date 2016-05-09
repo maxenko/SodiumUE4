@@ -48,5 +48,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
 	static void DecryptString(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, FString& decrypted, bool& success);
 
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
+	static void Encrypt(TArray<uint8> data, TArray<uint8> publicKey, TArray<uint8>& encrypted, bool& success);
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
+	static void Decrypt(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8>& decrypted, bool& success);
+
 
 };

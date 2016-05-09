@@ -85,3 +85,13 @@ FString USodiumUE4PluginBPLibrary::FromBase64S(FString data, bool& success) {
 	success = FBase64::Decode(data, dest);
 	return dest;
 }
+
+void USodiumUE4PluginBPLibrary::Encrypt(TArray<uint8> data, TArray<uint8> publicKey, TArray<uint8>& encrypted, bool& success) {
+	auto sodium = FSodiumUE4Module::Get();
+	success = sodium.Encrypt(encrypted, data, publicKey) == 0 ? true : false;
+}
+
+void USodiumUE4PluginBPLibrary::Decrypt(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8>& decrypted, bool& success) {
+	auto sodium = FSodiumUE4Module::Get();
+	success = sodium.Decrypt(decrypted, encrypted, publicKey, privateKey) == 0 ? true : false;
+}
