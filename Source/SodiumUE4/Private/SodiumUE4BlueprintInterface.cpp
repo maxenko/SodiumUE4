@@ -1,6 +1,7 @@
 #include "SodiumUE4PrivatePCH.h"
 #include "../Public/SodiumUE4BlueprintInterface.h"
 #include "SodiumUE4.h"
+#include "Base64.h"
 
 USodiumUE4PluginBPLibrary::USodiumUE4PluginBPLibrary(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -63,4 +64,24 @@ void USodiumUE4PluginBPLibrary::DecryptString(TArray<uint8> encrypted, TArray<ui
 		decrypted = FString(UTF8_TO_TCHAR(_decrypted.GetData()));
 		success = true;
 	}
+}
+
+FString USodiumUE4PluginBPLibrary::ToBase64(TArray<uint8> data) {
+	return FBase64::Encode(data);
+}
+
+FString USodiumUE4PluginBPLibrary::ToBase64S(FString data) {
+	return FBase64::Encode(data);
+}
+
+TArray<uint8> USodiumUE4PluginBPLibrary::FromBase64(FString data, bool& success) {
+	TArray<uint8> dest;
+	success = FBase64::Decode(data, dest);
+	return dest;
+}
+
+FString USodiumUE4PluginBPLibrary::FromBase64S(FString data, bool& success) {
+	FString dest;
+	success = FBase64::Decode(data, dest);
+	return dest;
 }

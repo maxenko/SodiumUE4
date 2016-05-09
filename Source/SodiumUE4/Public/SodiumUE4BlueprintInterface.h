@@ -22,6 +22,18 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Sodium|Utility")
 	static TArray<uint8> RandomBytes(int32 len);
 
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Utility")
+	static FString ToBase64(TArray<uint8> data);
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Utility")
+	static FString ToBase64S(FString data);
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Utility")
+	static TArray<uint8> FromBase64(FString data, bool& success);
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Utility")
+	static FString FromBase64S(FString data, bool& success);
+
 
 	//////////////////////////////////////////////////////////////////////////
 	// Core functionality
