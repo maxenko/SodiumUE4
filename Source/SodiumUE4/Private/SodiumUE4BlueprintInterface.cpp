@@ -20,6 +20,10 @@ TArray<uint8> USodiumUE4PluginBPLibrary::RandomBytes(int32 len){
 	return ret;
 }
 
+TArray<uint8> USodiumUE4PluginBPLibrary::Nonce() {
+	return RandomBytes(FSodiumUE4Module::Get().GetMacBytes());
+}
+
 void USodiumUE4PluginBPLibrary::GenerateKeyPair(TArray<uint8>& publicKey, TArray<uint8>& privateKey) {
 	auto sodium = FSodiumUE4Module::Get();
 	sodium.GenerateKeyPair(publicKey, privateKey);
@@ -30,7 +34,7 @@ void USodiumUE4PluginBPLibrary::EncryptString(FString s, TArray<uint8> publicKey
 	auto sodium = FSodiumUE4Module::Get();
 
 	TArray<uint8> data;
-	string _s(TCHAR_TO_UTF8(*s));
+	std::string _s(TCHAR_TO_UTF8(*s));
 	data.Append((unsigned char *)_s.data(), _s.size());
 	encrypted.SetNum(_s.size() + sodium.GetBoxSealBytes());
 
@@ -94,4 +98,14 @@ void USodiumUE4PluginBPLibrary::Encrypt(TArray<uint8> data, TArray<uint8> public
 void USodiumUE4PluginBPLibrary::Decrypt(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8>& decrypted, bool& success) {
 	auto sodium = FSodiumUE4Module::Get();
 	success = sodium.Decrypt(decrypted, encrypted, publicKey, privateKey) == 0 ? true : false;
+}
+
+void USodiumUE4PluginBPLibrary::EncryptAuthorised(TArray<uint8> data, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8> nonce, TArray<uint8>& encrypted, bool& success) {
+	auto sodium = FSodiumUE4Module::Get();
+	success = sodium.EncryptAuthorized(encrypted, data, nonce, publicKey, privateKey) == 0 ? true : false;
+}
+
+void USodiumUE4PluginBPLibrary::DecryptAuthorised(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8> nonce, TArray<uint8>& decrypted, bool& success) {
+	auto sodium = FSodiumUE4Module::Get();
+	success = sodium.DecryptAuthorized(decrypted, encrypted, nonce, publicKey, privateKey) == 0 ? true : false;
 }

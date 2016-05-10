@@ -22,11 +22,16 @@ public:
 	int GetPublicKeyBytes();
 	int GetSecretKeyBytes();
 	int GetBoxSealBytes();
+	int GetNonceBytes();
+	int GetMacBytes();
 
 	void RandomBytes(unsigned char* bytes, size_t len);
 
-	int FSodiumUE4Module::Encrypt(TArray<uint8>& encrypted, TArray<uint8>& data, TArray<uint8>& publicKey);
+	int Encrypt(TArray<uint8>& encrypted, TArray<uint8>& data, TArray<uint8>& publicKey);
 	int Decrypt(TArray<uint8>& decrypted, TArray<uint8>& encrypted, TArray<uint8>& publicKey, TArray<uint8>& privateKey);
+
+	int EncryptAuthorized(TArray<uint8>& encrypted, TArray<uint8>& data, TArray<uint8>& nonce, TArray<uint8>& publicKey, TArray<uint8>& privateKey);
+	int DecryptAuthorized(TArray<uint8>& decrypted, TArray<uint8>& encrypted, TArray<uint8>& nonce, TArray<uint8>& publicKey, TArray<uint8>& privateKey);
 
 	static inline FSodiumUE4Module& Get(){
 		return FModuleManager::LoadModuleChecked<FSodiumUE4Module>("SodiumUE4"); // name should be the same as directory of the plugin in /Plugins
@@ -38,5 +43,5 @@ public:
 	
 private:
 	/** Handle to the test dll we will load */
-	void*	libsodiumUE4Handle;
+	void* libsodiumUE4Handle;
 };

@@ -25,6 +25,14 @@ __declspec(dllexport) int SodiumGetBoxSealBytes() {
 	return crypto_box_SEALBYTES;
 }
 
+__declspec(dllexport) int SodiumGetNonceBytes() {
+	return crypto_box_NONCEBYTES;
+}
+
+__declspec(dllexport) int SodiumGetMacBytes() {
+	return crypto_box_MACBYTES;
+}
+
 __declspec(dllexport) int SodiumGenerateKeyPair(unsigned char *pk, unsigned char *sk) {
 	return crypto_box_keypair(pk, sk);
 }
@@ -35,6 +43,14 @@ __declspec(dllexport) int SodiumEncrypt(unsigned char *to, unsigned char *data, 
 
 __declspec(dllexport) int SodiumDecrypt(unsigned char *decrypted, unsigned char *encrypted, size_t len, unsigned char *pk, unsigned char *sk) {
 	return crypto_box_seal_open(decrypted, encrypted, len, pk, sk);
+}
+
+__declspec(dllexport) int SodiumEncryptAuth(unsigned char *to, unsigned char *data, size_t data_len, unsigned char *nonce, unsigned char *pk, unsigned char *sk) {
+	return crypto_box_easy(to, data, data_len, nonce, pk, sk);
+}
+
+__declspec(dllexport) int SodiumDecryptAuth(unsigned char *decrypted, unsigned char *encrypted, size_t len, unsigned char *nonce, unsigned char *pk, unsigned char *sk) {
+	return crypto_box_open_easy(decrypted, encrypted, len, nonce, pk, sk);
 }
 
 __declspec(dllexport) bool SodiumTest() {
@@ -63,7 +79,8 @@ __declspec(dllexport) bool SodiumTest() {
 	string toEncrypt = "I am a unique snowflake.";
 	string encrypted = SodiumEncryptString(toEncrypt, pk_test);
 
-	bool stringEncryptDecryptPass = (toEncrypt.compare(SodiumDecryptString(encrypted, pk_test, sk_test)) == 0);*/
+	bool stringEncryptDecryptPass = (toEncrypt.compare(SodiumDecryptString(encrypted, pk_test, sk_test)) == 0);
+	*/
 
 	return randomBytesPass;
 }

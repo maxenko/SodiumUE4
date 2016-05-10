@@ -82,6 +82,14 @@ int FSodiumUE4Module::GetBoxSealBytes() {
 	return SodiumGetBoxSealBytes();
 }
 
+int FSodiumUE4Module::GetNonceBytes() {
+	return SodiumGetNonceBytes();
+}
+
+int FSodiumUE4Module::GetMacBytes() {
+	return SodiumGetMacBytes();
+}
+
 void FSodiumUE4Module::GenerateKeyPair(TArray<uint8>& publicKey, TArray<uint8>& secretKey) {
 	auto sodium = FSodiumUE4Module::Get();
 
@@ -105,6 +113,16 @@ int FSodiumUE4Module::Encrypt(TArray<uint8>& encrypted, TArray<uint8>& data, TAr
 int FSodiumUE4Module::Decrypt(TArray<uint8>& decrypted, TArray<uint8>& encrypted, TArray<uint8>& publicKey, TArray<uint8>& privateKey) {
 	decrypted.SetNum(encrypted.Num() - this->GetBoxSealBytes());
 	return SodiumDecrypt(decrypted.GetData(), encrypted.GetData(), encrypted.Num(), publicKey.GetData(), privateKey.GetData());
+}
+
+int FSodiumUE4Module::EncryptAuthorized(TArray<uint8>& encrypted, TArray<uint8>& data, TArray<uint8>& nonce, TArray<uint8>& publicKey, TArray<uint8>& privateKey) {
+	encrypted.SetNum(data.Num() + this->GetMacBytes());
+	return SodiumEncryptAuth(encrypted.GetData(), data.GetData(), data.Num(), nonce.GetData(), publicKey.GetData(), privateKey.GetData());
+}
+
+int FSodiumUE4Module::DecryptAuthorized(TArray<uint8>& decrypted, TArray<uint8>& encrypted, TArray<uint8>& nonce, TArray<uint8>& publicKey, TArray<uint8>& privateKey) {
+	decrypted.SetNum(encrypted.Num() - this->GetMacBytes());
+	return SodiumDecryptAuth(decrypted.GetData(), encrypted.GetData(), encrypted.Num(), nonce.GetData(), publicKey.GetData(), privateKey.GetData());
 }
 
 bool FSodiumUE4Module::Test() {

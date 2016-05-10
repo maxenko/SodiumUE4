@@ -34,6 +34,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Sodium|Utility")
 	static FString FromBase64S(FString data, bool& success);
 
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Utility")
+	static TArray<uint8> Nonce();
+
 
 	//////////////////////////////////////////////////////////////////////////
 	// Core functionality
@@ -54,5 +57,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
 	static void Decrypt(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8>& decrypted, bool& success);
 
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
+	static void EncryptAuthorised(TArray<uint8> data, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8> nonce, TArray<uint8>& encrypted, bool& success);
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
+	static void DecryptAuthorised(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8> nonce, TArray<uint8>& decrypted, bool& success);
 
 };
