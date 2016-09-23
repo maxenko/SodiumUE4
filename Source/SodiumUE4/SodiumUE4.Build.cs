@@ -51,10 +51,7 @@ public class SodiumUE4 : ModuleRules
 				// ... add any modules that your module loads dynamically here ...
 			}
 			);
-
-		AddThirdPartyPrivateStaticDependencies(Target,
-				"SodiumUE4Library"
-				// ... add any third party modules that your module depends on here ...
-				);
+		
+		AddEngineThirdPartyPrivateStaticDependencies(Target,"SodiumUE4Library");
 	}
 }
