@@ -24,6 +24,6 @@ https://opensource.org/licenses/MIT
 https://opensource.org/licenses/ISC
 
 
-##Usage
+# Usage
 
 ![Public encryption](http://i.imgur.com/ezgBj7v.jpg)
