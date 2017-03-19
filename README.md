@@ -5,7 +5,7 @@ Look for stable branch in the future as this gets developed. Master branch is be
 
 ## Installation
 
-1. Clone this repo to your UnrealProject/Plugins/SodiumUE4/ folder.
+1. Clone this repo to your UnrealProject/Plugins/ folder.
 2. Compile Source/ThirdParty/SodiumUE4Library/libsodiumUE4.sln first, this will generate the sodium library. Use x64 and Release options as target.
 3. Regenerate code for your UE4 project (right click YourGame.uproject to do it)
 4. Add "SodiumUE4" to YourGame.Build.cs in PrivateDependencyModuleNames
