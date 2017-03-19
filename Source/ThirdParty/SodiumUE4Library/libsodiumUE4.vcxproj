@@ -150,7 +150,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)..\..\..\Binaries\ThirdParty\SodiumUE4Library\Win64\"</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)..\..\..\Binaries\Win64\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

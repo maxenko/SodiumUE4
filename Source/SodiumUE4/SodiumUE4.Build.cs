@@ -4,7 +4,8 @@ using UnrealBuildTool;
 
 public class SodiumUE4 : ModuleRules
 {
-	public SodiumUE4(TargetInfo Target)
+
+    public SodiumUE4(TargetInfo Target)
 	{
 		
 		PublicIncludePaths.AddRange(
@@ -29,8 +30,7 @@ public class SodiumUE4 : ModuleRules
 				"Core",
                 "CoreUObject",
                 "Engine",
-                //"Kismet",
-				"SodiumUE4Library",
+                "SodiumUE4Library",
 				"Projects"
 				// ... add other public dependencies that you statically link with here ...
 			}
@@ -40,6 +40,7 @@ public class SodiumUE4 : ModuleRules
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
+                
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
