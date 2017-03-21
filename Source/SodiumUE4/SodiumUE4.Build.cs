@@ -1,14 +1,25 @@
 // Copyright 1998-2016 Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
+using System.IO;
 
 public class SodiumUE4 : ModuleRules
 {
 
+
+
     public SodiumUE4(TargetInfo Target)
 	{
-		
-		PublicIncludePaths.AddRange(
+
+        RulesAssembly r;
+        FileReference CheckProjectFile;
+        UProjectInfo.TryGetProjectForTarget("MachRace", out CheckProjectFile);
+        r = RulesCompiler.CreateProjectRulesAssembly(CheckProjectFile);
+        FileReference f = r.GetModuleFileName(this.GetType().Name);
+        string ModulePath = Path.GetDirectoryName(f.CanonicalName);
+        string sodiumDllPath = Path.GetFullPath(Path.Combine(ModulePath, "../../Binaries/Win64/libsodiumUE4.dll"));
+
+        PublicIncludePaths.AddRange(
 			new string[] {
 				"SodiumUE4/Public"
 				// ... add public include paths required here ...
@@ -52,7 +63,13 @@ public class SodiumUE4 : ModuleRules
 				// ... add any modules that your module loads dynamically here ...
 			}
 			);
-		
-		AddEngineThirdPartyPrivateStaticDependencies(Target,"SodiumUE4Library");
+
+
+
+        //RuntimeDependencies.Add(GetUProjectPath()+"/Plugins/SodiumUE4/Binaries/Win64/libsodiumUE4.dll", StagedFileType.NonUFS);
+
+        RuntimeDependencies.Add(new RuntimeDependency(sodiumDllPath));
+
+        AddEngineThirdPartyPrivateStaticDependencies(Target,"SodiumUE4Library");
 	}
 }
