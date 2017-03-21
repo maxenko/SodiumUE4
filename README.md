@@ -5,15 +5,13 @@ Look for stable branch in the future as this gets developed. Master branch is be
 
 ## Installation
 
-1. Clone this repo to your UnrealProject/Plugins/ folder.
+1. *git clone* this repo to your UnrealProject/Plugins/ folder.
 2. Compile Source/ThirdParty/SodiumUE4Library/libsodiumUE4.sln first, this will generate the sodium library. Use x64 and Release options as target.
 3. Regenerate code for your UE4 project (right click YourGame.uproject to do it)
 4. Add "SodiumUE4" to YourGame.Build.cs in PrivateDependencyModuleNames
 5. Open and Build your game in Visual Studio.
 6. Start editor as usual, allow it to compile SodiumUE4.
-7. To have this plugin work in packaged game, copy libsodiumUE4.dll to the same location as YourGame-Win64-Shipping.exe
-
-I know its not 100% automated yet, if you know how to package this better - please fork it. I am unlikely to do it anytime soon.
+7. Package your game as you normally would.
 
 If you can help improving this readme, please pull.
 
