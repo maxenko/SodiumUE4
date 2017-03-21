@@ -13,7 +13,7 @@ public class SodiumUE4 : ModuleRules
 
         RulesAssembly r;
         FileReference CheckProjectFile;
-        UProjectInfo.TryGetProjectForTarget("MachRace", out CheckProjectFile);
+        UProjectInfo.TryGetProjectForTarget("YourGame", out CheckProjectFile);
         r = RulesCompiler.CreateProjectRulesAssembly(CheckProjectFile);
         FileReference f = r.GetModuleFileName(this.GetType().Name);
         string ModulePath = Path.GetDirectoryName(f.CanonicalName);
