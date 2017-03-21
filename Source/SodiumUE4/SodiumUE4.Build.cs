@@ -13,7 +13,9 @@ public class SodiumUE4 : ModuleRules
 
         RulesAssembly r;
         FileReference CheckProjectFile;
-        UProjectInfo.TryGetProjectForTarget("YourGame", out CheckProjectFile);
+        string ProjectNameModuleRules = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+        string ProjectName = ProjectNameModuleRules.Substring(0, ProjectNameModuleRules.Length - "ModuleRules".Length);
+        UProjectInfo.TryGetProjectForTarget(ProjectName, out CheckProjectFile);
         r = RulesCompiler.CreateProjectRulesAssembly(CheckProjectFile);
         FileReference f = r.GetModuleFileName(this.GetType().Name);
         string ModulePath = Path.GetDirectoryName(f.CanonicalName);
