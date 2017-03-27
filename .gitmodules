@@ -1,6 +1,3 @@
-[submodule "Source/ThirdParty/-b"]
-	path = Source/ThirdParty/-b
-	url = git@github.com:jedisct1/libsodium.git
 [submodule "Source/ThirdParty/libsodium"]
 	path = Source/ThirdParty/libsodium
 	url = git@github.com:jedisct1/libsodium.git
