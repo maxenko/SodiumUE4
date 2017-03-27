@@ -7,71 +7,43 @@ public class SodiumUE4 : ModuleRules
 {
 
 
-
     public SodiumUE4(TargetInfo Target)
 	{
 
-        RulesAssembly r;
-        FileReference CheckProjectFile;
-        string ProjectNameModuleRules = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-        string ProjectName = ProjectNameModuleRules.Substring(0, ProjectNameModuleRules.Length - "ModuleRules".Length);
-        UProjectInfo.TryGetProjectForTarget(ProjectName, out CheckProjectFile);
-        r = RulesCompiler.CreateProjectRulesAssembly(CheckProjectFile);
-        FileReference f = r.GetModuleFileName(this.GetType().Name);
-        string ModulePath = Path.GetDirectoryName(f.CanonicalName);
-        string sodiumDllPath = Path.GetFullPath(Path.Combine(ModulePath, "../../Binaries/Win64/libsodiumUE4.dll"));
+
+        Definitions.Add("SODIUM_STATIC=1");
+        Definitions.Add("SODIUM_EXPORT=");
+
+        string sodiumIncludes = Path.Combine(ModuleDirectory, "../ThirdParty/libsodium/");
 
         PublicIncludePaths.AddRange(
 			new string[] {
-				"SodiumUE4/Public"
-				// ... add public include paths required here ...
+				"SodiumUE4/Public",
+                sodiumIncludes
 			}
 			);
 				
 		
-		PrivateIncludePaths.AddRange(
-			new string[] {
-				"SodiumUE4/Private",
-				// ... add other private include paths required here ...
-			}
-			);
+		PrivateIncludePaths.AddRange(new string[] {"SodiumUE4/Private"});
 			
 		
-		PublicDependencyModuleNames.AddRange(
-			new string[]
-			{
-				"Core",
-                "CoreUObject",
-                "Engine",
-                "SodiumUE4Library",
-				"Projects"
-				// ... add other public dependencies that you statically link with here ...
-			}
-			);
+		PublicDependencyModuleNames.AddRange(new string[]{"Core"});
 			
 		
 		PrivateDependencyModuleNames.AddRange(
-			new string[]
-			{
-                
-				// ... add private dependencies that you statically link with here ...	
-			}
+			new string[]{
+				"CoreUObject",
+				"Engine",
+                "Slate",
+                "SlateCore",
+                "Projects"
+            }
 			);
-		
-		
-		DynamicallyLoadedModuleNames.AddRange(
-			new string[]
-			{
-				// ... add any modules that your module loads dynamically here ...
-			}
-			);
+	
 
+        string PlatformString = (Target.Platform == UnrealTargetPlatform.Win64) ? "x64" : "Win32";
+        string path = Path.Combine(ModuleDirectory, "../ThirdParty/libsodium/Build/Release/"+ PlatformString + "/libsodium.lib");
 
-
-        //RuntimeDependencies.Add(GetUProjectPath()+"/Plugins/SodiumUE4/Binaries/Win64/libsodiumUE4.dll", StagedFileType.NonUFS);
-
-        RuntimeDependencies.Add(new RuntimeDependency(sodiumDllPath));
-
-        AddEngineThirdPartyPrivateStaticDependencies(Target,"SodiumUE4Library");
-	}
+        PublicAdditionalLibraries.Add(path);
+    }
 }

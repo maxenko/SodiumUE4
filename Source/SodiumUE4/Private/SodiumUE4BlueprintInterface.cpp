@@ -2,15 +2,12 @@
 #include "../Public/SodiumUE4BlueprintInterface.h"
 #include "SodiumUE4.h"
 #include "Base64.h"
+#include <string> 
 
 USodiumUE4PluginBPLibrary::USodiumUE4PluginBPLibrary(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 
-}
-
-bool USodiumUE4PluginBPLibrary::SodiumTest() {
-	return FSodiumUE4Module::Get().Test();
 }
 
 TArray<uint8> USodiumUE4PluginBPLibrary::RandomBytes(int32 len){

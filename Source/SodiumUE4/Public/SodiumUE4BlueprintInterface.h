@@ -15,9 +15,6 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// Utility methods
 	//////////////////////////////////////////////////////////////////////////
-
-	UFUNCTION(BlueprintCallable, Category = "Sodium|Utility")
-	static bool SodiumTest();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Sodium|Utility")
 	static TArray<uint8> RandomBytes(int32 len);
