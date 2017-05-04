@@ -28,6 +28,10 @@ void USodiumUE4PluginBPLibrary::GenerateKeyPair(TArray<uint8>& publicKey, TArray
 
 void USodiumUE4PluginBPLibrary::EncryptString(FString s, TArray<uint8> publicKey, TArray<uint8>& encrypted, bool& success) {
 
+	if (publicKey.Num() == 0) { // sanity check
+		return;
+	}
+
 	auto sodium = FSodiumUE4Module::Get();
 
 	TArray<uint8> data;
