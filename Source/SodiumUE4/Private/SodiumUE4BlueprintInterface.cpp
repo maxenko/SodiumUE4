@@ -10,6 +10,16 @@ USodiumUE4PluginBPLibrary::USodiumUE4PluginBPLibrary(const FObjectInitializer& O
 
 }
 
+bool SanityCheck_Encrypt(TArray<uint8> &publicKey){
+  return (publicKey.Num() == 0);
+}
+
+bool SanityCheck_Decrypt(TArray<uint8> &encrypted, TArray<uint8> &publicKey, TArray<uint8> &privateKey){
+  return (encrypted.Num() == 0
+    || publicKey.Num() == 0
+    || privateKey.Num() == 0);
+}
+
 TArray<uint8> USodiumUE4PluginBPLibrary::RandomBytes(int32 len){
 	TArray<uint8> ret;
 	ret.SetNum(len);
@@ -27,8 +37,8 @@ void USodiumUE4PluginBPLibrary::GenerateKeyPair(TArray<uint8>& publicKey, TArray
 }
 
 void USodiumUE4PluginBPLibrary::EncryptString(FString s, TArray<uint8> publicKey, TArray<uint8>& encrypted, bool& success) {
-
-	if (publicKey.Num() == 0) { // sanity check
+	if (SanityCheck_Encrypt(publicKey)){
+		success = false;
 		return;
 	}
 
@@ -50,7 +60,11 @@ void USodiumUE4PluginBPLibrary::EncryptString(FString s, TArray<uint8> publicKey
 }
 
 void USodiumUE4PluginBPLibrary::DecryptString(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, FString& decrypted, bool& success) {
-
+  if (SanityCheck_Decrypt(encrypted, publicKey, privateKey)){
+		success = false;
+		return;
+	}
+  
 	auto sodium = FSodiumUE4Module::Get();
 
 	auto decryptedContainerSize = encrypted.Num() - sodium.GetBoxSealBytes();
@@ -92,21 +106,41 @@ FString USodiumUE4PluginBPLibrary::FromBase64S(FString data, bool& success) {
 }
 
 void USodiumUE4PluginBPLibrary::Encrypt(TArray<uint8> data, TArray<uint8> publicKey, TArray<uint8>& encrypted, bool& success) {
+  if (SanityCheck_Encrypt(publicKey)){
+		success = false;
+		return;
+	}
+  
 	auto sodium = FSodiumUE4Module::Get();
 	success = sodium.Encrypt(encrypted, data, publicKey) == 0 ? true : false;
 }
 
 void USodiumUE4PluginBPLibrary::Decrypt(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8>& decrypted, bool& success) {
+  if (SanityCheck_Decrypt(encrypted, publicKey, privateKey)){
+		success = false;
+		return;
+	}
+  
 	auto sodium = FSodiumUE4Module::Get();
 	success = sodium.Decrypt(decrypted, encrypted, publicKey, privateKey) == 0 ? true : false;
 }
 
 void USodiumUE4PluginBPLibrary::EncryptAuthenticated(TArray<uint8> data, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8> nonce, TArray<uint8>& encrypted, bool& success) {
+  if (SanityCheck_Encrypt(publicKey)){
+		success = false;
+		return;
+	}
+  
 	auto sodium = FSodiumUE4Module::Get();
 	success = sodium.EncryptAuthenticated(encrypted, data, nonce, publicKey, privateKey) == 0 ? true : false;
 }
 
 void USodiumUE4PluginBPLibrary::DecryptAuthenticated(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8> nonce, TArray<uint8>& decrypted, bool& success) {
+  if (SanityCheck_Decrypt(encrypted, publicKey, privateKey)){
+		success = false;
+		return;
+	}
+  
 	auto sodium = FSodiumUE4Module::Get();
 	success = sodium.DecryptAuthenticated(decrypted, encrypted, nonce, publicKey, privateKey) == 0 ? true : false;
 }
