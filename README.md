@@ -1,7 +1,9 @@
 # About SodiumUE4
 An easy to use public and private cryptography plugin for Unreal Engine 4 based on libsodium.
 
-It currently works only on Win64 builds of UE4. Eventually Mac and Android is planned.
+It currently works only on Win64 builds of UE4. Eventually Mac and Android is planned. The plugin is very simple (due to portable nature of libsodium), so it works on most versions of UE4.
+
+Last tested on: **4.19.2**
 
 ## Installation
 
