@@ -6,7 +6,7 @@
 #include "Core.h"
 #include "ModuleManager.h"
 #include "Interfaces/IPluginManager.h"
-#include "../ThirdParty/libsodium/src/libsodium/include/sodium.h"
+
 
 #if PLATFORM_WINDOWS
 //#include "../../ThirdParty/SodiumUE4Library/SodiumUE4.h"
@@ -27,26 +27,6 @@ void FSodiumUE4Module::ShutdownModule()
 // Sodium API
 //////////////////////////////////////////////////////////////////////////
 
-int FSodiumUE4Module::GetPublicKeyBytes() {
-	return crypto_box_PUBLICKEYBYTES;
-}
-
-int FSodiumUE4Module::GetSecretKeyBytes() {
-	return crypto_box_SECRETKEYBYTES;
-}
-
-int FSodiumUE4Module::GetBoxSealBytes() {
-	return crypto_box_SEALBYTES;
-}
-
-int FSodiumUE4Module::GetNonceBytes() {
-	return crypto_box_NONCEBYTES;
-}
-
-int FSodiumUE4Module::GetMacBytes() {
-	return crypto_box_MACBYTES;
-}
-
 void FSodiumUE4Module::GenerateKeyPair(TArray<uint8>& publicKey, TArray<uint8>& secretKey) {
 	auto sodium = FSodiumUE4Module::Get();
 
@@ -62,27 +42,49 @@ void FSodiumUE4Module::RandomBytes(unsigned char* bytes, size_t len) {
 	randombytes_buf(bytes, len);
 }
 
+//////////////////////////////////////////////////////////////////////////
+// Asymmetric
+//////////////////////////////////////////////////////////////////////////
+
 int FSodiumUE4Module::Encrypt(TArray<uint8>& encrypted, TArray<uint8>& data, TArray<uint8>& publicKey) {
-	encrypted.SetNum(data.Num() + this->GetBoxSealBytes());
+	encrypted.SetNum(data.Num() + crypto_box_SEALBYTES);
 	return crypto_box_seal(encrypted.GetData(), data.GetData(), data.Num(), publicKey.GetData());
 }
 
 int FSodiumUE4Module::Decrypt(TArray<uint8>& decrypted, TArray<uint8>& encrypted, TArray<uint8>& publicKey, TArray<uint8>& privateKey) {
-	decrypted.SetNum(encrypted.Num() - this->GetBoxSealBytes());
+	decrypted.SetNum(encrypted.Num() - crypto_box_SEALBYTES);
 	return crypto_box_seal_open(decrypted.GetData(), encrypted.GetData(), encrypted.Num(), publicKey.GetData(), privateKey.GetData());
-
 }
 
 int FSodiumUE4Module::EncryptAuthenticated(TArray<uint8>& encrypted, TArray<uint8>& data, TArray<uint8>& nonce, TArray<uint8>& publicKey, TArray<uint8>& privateKey) {
-	encrypted.SetNum(data.Num() + this->GetMacBytes());
+	encrypted.SetNum(data.Num() + crypto_box_MACBYTES);
 	return crypto_box_easy(encrypted.GetData(), data.GetData(), data.Num(), nonce.GetData(), publicKey.GetData(), privateKey.GetData());
-
 }
 
 int FSodiumUE4Module::DecryptAuthenticated(TArray<uint8>& decrypted, TArray<uint8>& encrypted, TArray<uint8>& nonce, TArray<uint8>& publicKey, TArray<uint8>& privateKey) {
-	decrypted.SetNum(encrypted.Num() - this->GetMacBytes());
+	decrypted.SetNum(encrypted.Num() - crypto_box_MACBYTES);
 	return crypto_box_open_easy(decrypted.GetData(), encrypted.GetData(), encrypted.Num(), nonce.GetData(), publicKey.GetData(), privateKey.GetData());
+}
 
+//////////////////////////////////////////////////////////////////////////
+// Symmetric
+//////////////////////////////////////////////////////////////////////////
+
+TArray<uint8> FSodiumUE4Module::GenerateKey() {
+	TArray<uint8> key;
+	key.SetNum(crypto_secretbox_KEYBYTES);
+	crypto_secretbox_keygen(key.GetData());
+	return key;
+}
+
+int FSodiumUE4Module::EncryptSymmetric(TArray<uint8>& encrypted, TArray<uint8>& data, TArray<uint8>& nonce, TArray<uint8>& key) {
+	encrypted.SetNum(data.Num() + crypto_secretbox_MACBYTES);
+	return crypto_secretbox_easy(encrypted.GetData(), data.GetData(), data.Num(), nonce.GetData(), key.GetData());
+}
+
+int FSodiumUE4Module::DecryptSymmetric(TArray<uint8>& decrypted, TArray<uint8>& encrypted, TArray<uint8>& nonce, TArray<uint8>& key) {
+	decrypted.SetNum(decrypted.Num() - crypto_secretbox_MACBYTES);
+	return crypto_secretbox_open_easy(decrypted.GetData(), encrypted.GetData(), encrypted.Num(), nonce.GetData(), key.GetData());
 }
 
 #undef LOCTEXT_NAMESPACE

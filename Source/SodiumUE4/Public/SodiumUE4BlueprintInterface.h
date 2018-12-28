@@ -32,7 +32,10 @@ public:
 	static FString FromBase64S(FString data, bool& success);
 
 	UFUNCTION(BlueprintCallable, Category = "Sodium|Utility")
-	static TArray<uint8> Nonce();
+	static TArray<uint8> GenerateAsymmetricNonce();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Sodium|Core")
+	static int AsymmetricNonceLength();
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -60,4 +63,24 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
 	static void DecryptAuthenticated(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8> nonce, TArray<uint8>& decrypted, bool& success);
 
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
+	static void EncryptStringSymmetric(FString s, TArray<uint8> key, TArray<uint8> nonce, TArray<uint8>& encrypted, bool& success);
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
+	static void DecryptStringSymmetric(TArray<uint8> encrypted, TArray<uint8> key, TArray<uint8> nonce, FString& decrypted, bool& success);
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
+	static void EncryptSymmetric(TArray<uint8> data, TArray<uint8> key, TArray<uint8> nonce, TArray<uint8>& encrypted, bool& success);
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
+	static void DecryptSymmetric(TArray<uint8> encrypted, TArray<uint8> key, TArray<uint8> nonce, TArray<uint8>& decrypted, bool& success);
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Core")
+	static TArray<uint8> GenerateKey();
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Utility")
+	static TArray<uint8> GenerateSymmetricNonce();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Sodium|Core")
+	static int SymmetricNonceLength();
 };

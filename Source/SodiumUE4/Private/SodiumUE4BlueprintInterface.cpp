@@ -5,19 +5,12 @@
 #include <string> 
 
 USodiumUE4PluginBPLibrary::USodiumUE4PluginBPLibrary(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
-{
+	: Super(ObjectInitializer){
 
 }
 
-bool SanityCheck_Encrypt(TArray<uint8> &publicKey){
-  return (publicKey.Num() == 0);
-}
-
-bool SanityCheck_Decrypt(TArray<uint8> &encrypted, TArray<uint8> &publicKey, TArray<uint8> &privateKey){
-  return (encrypted.Num() == 0
-    || publicKey.Num() == 0
-    || privateKey.Num() == 0);
+bool SanityCheckPass(TArray<uint8> &key){
+	return (key.Num() > 0);
 }
 
 TArray<uint8> USodiumUE4PluginBPLibrary::RandomBytes(int32 len){
@@ -27,17 +20,13 @@ TArray<uint8> USodiumUE4PluginBPLibrary::RandomBytes(int32 len){
 	return ret;
 }
 
-TArray<uint8> USodiumUE4PluginBPLibrary::Nonce() {
-	return RandomBytes(FSodiumUE4Module::Get().GetMacBytes());
-}
-
 void USodiumUE4PluginBPLibrary::GenerateKeyPair(TArray<uint8>& publicKey, TArray<uint8>& privateKey) {
 	auto sodium = FSodiumUE4Module::Get();
 	sodium.GenerateKeyPair(publicKey, privateKey);
 }
 
 void USodiumUE4PluginBPLibrary::EncryptString(FString s, TArray<uint8> publicKey, TArray<uint8>& encrypted, bool& success) {
-	if (SanityCheck_Encrypt(publicKey)){
+	if (!SanityCheckPass(publicKey)){
 		success = false;
 		return;
 	}
@@ -60,7 +49,7 @@ void USodiumUE4PluginBPLibrary::EncryptString(FString s, TArray<uint8> publicKey
 }
 
 void USodiumUE4PluginBPLibrary::DecryptString(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, FString& decrypted, bool& success) {
-  if (SanityCheck_Decrypt(encrypted, publicKey, privateKey)){
+  if (!SanityCheckPass(encrypted) || !SanityCheckPass(publicKey) || !SanityCheckPass(privateKey)){
 		success = false;
 		return;
 	}
@@ -106,7 +95,7 @@ FString USodiumUE4PluginBPLibrary::FromBase64S(FString data, bool& success) {
 }
 
 void USodiumUE4PluginBPLibrary::Encrypt(TArray<uint8> data, TArray<uint8> publicKey, TArray<uint8>& encrypted, bool& success) {
-  if (SanityCheck_Encrypt(publicKey)){
+	if (!SanityCheckPass(publicKey)){
 		success = false;
 		return;
 	}
@@ -116,7 +105,7 @@ void USodiumUE4PluginBPLibrary::Encrypt(TArray<uint8> data, TArray<uint8> public
 }
 
 void USodiumUE4PluginBPLibrary::Decrypt(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8>& decrypted, bool& success) {
-  if (SanityCheck_Decrypt(encrypted, publicKey, privateKey)){
+	if (!SanityCheckPass(encrypted) || !SanityCheckPass(publicKey) || !SanityCheckPass(privateKey)) {
 		success = false;
 		return;
 	}
@@ -126,7 +115,7 @@ void USodiumUE4PluginBPLibrary::Decrypt(TArray<uint8> encrypted, TArray<uint8> p
 }
 
 void USodiumUE4PluginBPLibrary::EncryptAuthenticated(TArray<uint8> data, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8> nonce, TArray<uint8>& encrypted, bool& success) {
-  if (SanityCheck_Encrypt(publicKey)){
+	if (!SanityCheckPass(publicKey)){
 		success = false;
 		return;
 	}
@@ -136,11 +125,118 @@ void USodiumUE4PluginBPLibrary::EncryptAuthenticated(TArray<uint8> data, TArray<
 }
 
 void USodiumUE4PluginBPLibrary::DecryptAuthenticated(TArray<uint8> encrypted, TArray<uint8> publicKey, TArray<uint8> privateKey, TArray<uint8> nonce, TArray<uint8>& decrypted, bool& success) {
-  if (SanityCheck_Decrypt(encrypted, publicKey, privateKey)){
+	if (!SanityCheckPass(encrypted) || !SanityCheckPass(publicKey) || !SanityCheckPass(privateKey)) {
 		success = false;
 		return;
 	}
   
 	auto sodium = FSodiumUE4Module::Get();
 	success = sodium.DecryptAuthenticated(decrypted, encrypted, nonce, publicKey, privateKey) == 0 ? true : false;
+}
+
+void USodiumUE4PluginBPLibrary::EncryptSymmetric(TArray<uint8> data, TArray<uint8> key, TArray<uint8> nonce, TArray<uint8>& encrypted, bool& success) {
+	if (!SanityCheckPass(data) || !SanityCheckPass(key)) {
+		success = false;
+		return;
+	}
+
+	auto sodium = FSodiumUE4Module::Get();
+	success = sodium.EncryptSymmetric(encrypted, data, nonce, key);
+}
+
+void USodiumUE4PluginBPLibrary::DecryptSymmetric(TArray<uint8> encrypted, TArray<uint8> key, TArray<uint8> nonce, TArray<uint8>& decrypted, bool& success) {
+	if (!SanityCheckPass(encrypted) || !SanityCheckPass(key)) {
+		success = false;
+		return;
+	}
+
+	auto sodium = FSodiumUE4Module::Get();
+	success = sodium.DecryptSymmetric(decrypted, encrypted, nonce, key);
+}
+
+TArray<uint8> USodiumUE4PluginBPLibrary::GenerateKey() {
+	auto sodium = FSodiumUE4Module::Get();
+	return sodium.GenerateKey();
+}
+
+void USodiumUE4PluginBPLibrary::EncryptStringSymmetric(FString s, TArray<uint8> key, TArray<uint8> nonce, TArray<uint8>& encrypted, bool& success) {
+	if (!SanityCheckPass(key)) {
+		success = false;
+		return;
+	}
+
+	auto sodium = FSodiumUE4Module::Get();
+
+	TArray<uint8> data;
+	std::string _s(TCHAR_TO_UTF8(*s));
+	data.Append((unsigned char *)_s.data(), _s.size());
+	//encrypted.SetNum(_s.size() + sodium.GetMacBytesSymmetric());
+
+	auto msg = sodium.EncryptSymmetric(encrypted, data, nonce, key);
+
+	if (msg == -1) {
+		//encrypted.Empty();
+		success = false;
+	} else {
+		success = true;
+	}
+}
+
+void USodiumUE4PluginBPLibrary::DecryptStringSymmetric(TArray<uint8> encrypted, TArray<uint8> key, TArray<uint8> nonce, FString& decrypted, bool& success) {
+	if (!SanityCheckPass(encrypted) || !SanityCheckPass(key)) {
+		success = false;
+		return;
+	}
+
+	auto sodium = FSodiumUE4Module::Get();
+
+	auto decryptedContainerSize = encrypted.Num() - sodium.GetMacBytesSymmetric();
+
+	TArray<uint8> _decrypted;
+
+	// preemptively terminate the string
+	_decrypted.SetNum(decryptedContainerSize + 1);
+	_decrypted[decryptedContainerSize] = 0;
+
+	auto msg = sodium.DecryptSymmetric(_decrypted, encrypted, nonce, key);
+
+	if (msg == -1) {
+		success = false;
+	} else {
+		decrypted = FString(UTF8_TO_TCHAR(_decrypted.GetData()));
+		success = true;
+	}
+}
+
+int USodiumUE4PluginBPLibrary::AsymmetricNonceLength() {
+	return FSodiumUE4Module::Get().GetAssymetricNonceLen();
+}
+
+int USodiumUE4PluginBPLibrary::SymmetricNonceLength() {
+	return FSodiumUE4Module::Get().GetSymmetricNonceLen();
+}
+
+TArray<uint8> USodiumUE4PluginBPLibrary::GenerateAsymmetricNonce() {
+	auto sodium = FSodiumUE4Module::Get();
+
+	TArray<uint8> nonce;
+	auto len = sodium.GetAssymetricNonceLen();
+	nonce.SetNum(len);
+
+	sodium.RandomBytes(nonce.GetData(), len);
+
+	return nonce;
+}
+
+TArray<uint8> USodiumUE4PluginBPLibrary::GenerateSymmetricNonce() {
+
+	auto sodium = FSodiumUE4Module::Get();
+
+	TArray<uint8> nonce;
+	auto len = sodium.GetSymmetricNonceLen();
+	nonce.SetNum(len);
+
+	sodium.RandomBytes(nonce.GetData(), len);
+
+	return nonce;
 }
