@@ -7,12 +7,12 @@ public class SodiumUE4 : ModuleRules
 {
 
 
-    public SodiumUE4(TargetInfo Target)
+    public SodiumUE4(ReadOnlyTargetRules Target) : base(Target)
 	{
 
 
-        Definitions.Add("SODIUM_STATIC=1");
-        Definitions.Add("SODIUM_EXPORT=");
+        PublicDefinitions.Add("SODIUM_STATIC=1");
+        PublicDefinitions.Add("SODIUM_EXPORT=");
 
         string sodiumIncludes = Path.Combine(ModuleDirectory, "../ThirdParty/libsodium/");
 
