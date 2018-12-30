@@ -4,9 +4,7 @@
 #include "Base64.h"
 #include <string> 
 
-USodiumUE4PluginBPLibrary::USodiumUE4PluginBPLibrary(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer){
-
+USodiumUE4PluginBPLibrary::USodiumUE4PluginBPLibrary(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer){
 }
 
 bool SanityCheckPass(TArray<uint8> &key){
@@ -21,8 +19,7 @@ TArray<uint8> USodiumUE4PluginBPLibrary::RandomBytes(int32 len){
 }
 
 void USodiumUE4PluginBPLibrary::GenerateKeyPair(TArray<uint8>& publicKey, TArray<uint8>& privateKey) {
-	auto sodium = FSodiumUE4Module::Get();
-	sodium.GenerateKeyPair(publicKey, privateKey);
+	FSodiumUE4Module::Get().GenerateKeyPair(publicKey, privateKey);
 }
 
 void USodiumUE4PluginBPLibrary::EncryptString(FString s, TArray<uint8> publicKey, TArray<uint8>& encrypted, bool& success) {
@@ -56,13 +53,12 @@ void USodiumUE4PluginBPLibrary::DecryptString(TArray<uint8> encrypted, TArray<ui
   
 	auto sodium = FSodiumUE4Module::Get();
 
-	auto decryptedContainerSize = encrypted.Num() - sodium.GetBoxSealBytes();
+	auto decryptedContainerSize = encrypted.Num() + sodium.GetBoxSealBytes();
 
 	TArray<uint8> _decrypted;
 
 	// preemptively terminate the string
-	_decrypted.SetNum(decryptedContainerSize+1);
-	_decrypted[decryptedContainerSize] = 0; 
+	_decrypted.SetNumZeroed(decryptedContainerSize + 1);
 
 	auto msg = sodium.Decrypt(_decrypted, encrypted, publicKey, privateKey);
 	
@@ -155,8 +151,7 @@ void USodiumUE4PluginBPLibrary::DecryptSymmetric(TArray<uint8> encrypted, TArray
 }
 
 TArray<uint8> USodiumUE4PluginBPLibrary::GenerateKey() {
-	auto sodium = FSodiumUE4Module::Get();
-	return sodium.GenerateKey();
+	return FSodiumUE4Module::Get().GenerateKey();
 }
 
 void USodiumUE4PluginBPLibrary::EncryptStringSymmetric(FString s, TArray<uint8> key, TArray<uint8> nonce, TArray<uint8>& encrypted, bool& success) {
@@ -170,12 +165,12 @@ void USodiumUE4PluginBPLibrary::EncryptStringSymmetric(FString s, TArray<uint8> 
 	TArray<uint8> data;
 	std::string _s(TCHAR_TO_UTF8(*s));
 	data.Append((unsigned char *)_s.data(), _s.size());
-	//encrypted.SetNum(_s.size() + sodium.GetMacBytesSymmetric());
+	encrypted.SetNum(_s.size() + sodium.GetMacBytesSymmetric());
 
 	auto msg = sodium.EncryptSymmetric(encrypted, data, nonce, key);
 
 	if (msg == -1) {
-		//encrypted.Empty();
+		encrypted.Empty();
 		success = false;
 	} else {
 		success = true;
@@ -190,13 +185,12 @@ void USodiumUE4PluginBPLibrary::DecryptStringSymmetric(TArray<uint8> encrypted, 
 
 	auto sodium = FSodiumUE4Module::Get();
 
-	auto decryptedContainerSize = encrypted.Num() - sodium.GetMacBytesSymmetric();
+	auto decryptedContainerSize = encrypted.Num() + sodium.GetMacBytesSymmetric();
 
 	TArray<uint8> _decrypted;
 
 	// preemptively terminate the string
-	_decrypted.SetNum(decryptedContainerSize + 1);
-	_decrypted[decryptedContainerSize] = 0;
+	_decrypted.SetNumZeroed(decryptedContainerSize + 1);
 
 	auto msg = sodium.DecryptSymmetric(_decrypted, encrypted, nonce, key);
 

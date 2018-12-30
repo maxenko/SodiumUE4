@@ -31,12 +31,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Sodium|Utility")
 	static FString FromBase64S(FString data, bool& success);
 
-	UFUNCTION(BlueprintCallable, Category = "Sodium|Utility")
-	static TArray<uint8> GenerateAsymmetricNonce();
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Sodium|Core")
-	static int AsymmetricNonceLength();
-
 
 	//////////////////////////////////////////////////////////////////////////
 	// Core functionality
@@ -83,4 +77,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Sodium|Core")
 	static int SymmetricNonceLength();
+
+	UFUNCTION(BlueprintCallable, Category = "Sodium|Utility")
+	static TArray<uint8> GenerateAsymmetricNonce();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Sodium|Core")
+	static int AsymmetricNonceLength();
+
 };
