@@ -2,10 +2,7 @@
 #include "../Public/SodiumUE4BlueprintInterface.h"
 #include "SodiumUE4.h"
 #include "Base64.h"
-#include <string> 
-
-USodiumUE4PluginBPLibrary::USodiumUE4PluginBPLibrary(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer){
-}
+#include <string>
 
 bool SanityCheckPass(TArray<uint8> &key){
 	return (key.Num() > 0);

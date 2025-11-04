@@ -7,7 +7,7 @@
 UCLASS()
 class USodiumUE4PluginBPLibrary : public UBlueprintFunctionLibrary
 {
-	GENERATED_UCLASS_BODY()
+	GENERATED_BODY()
 
 public:
 

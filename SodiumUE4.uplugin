@@ -1,9 +1,9 @@
 {
 	"FileVersion": 3,
-	"Version": 2,
-	"VersionName": "1.1",
+	"Version": 3,
+	"VersionName": "2.0",
 	"FriendlyName": "SodiumUE4",
-	"Description": "Easy to use encryption plugin for UE4.",
+	"Description": "Easy to use encryption plugin for Unreal Engine 5.6.",
 	"Category": "Encryption",
 	"CreatedBy": "Max Enko",
 	"CreatedByURL": "https://github.com/maxenko",
@@ -14,6 +14,7 @@
 	"CanContainContent": false,
 	"IsBetaVersion": false,
 	"Installed": false,
+	"EngineVersion": "5.6.0",
 	"Modules": [
 		{
 			"Name": "SodiumUE4",
