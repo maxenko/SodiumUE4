@@ -4,7 +4,7 @@ An easy to use public and private cryptography plugin for Unreal Engine based on
 It currently works only on Win64 builds of Unreal Engine. Eventually Mac and Android is planned. The plugin is very simple (due to portable nature of libsodium), so it works on most versions of Unreal Engine.
 
 **Supported versions:**
-- Unreal Engine 5.6+ (current)
+- Unreal Engine 5.6+ (tested with 5.6)
 - Legacy UE4 support: Last tested on 4.19.2
 
 ## Installation
